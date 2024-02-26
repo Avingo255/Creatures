@@ -13,17 +13,32 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * The WorldUpdater class is responsible for updating the world state based on the given delta time.
+ * It handles the movement, mating, food intake, energy depletion, life depletion, and food creation of creatures in the world.
+ */
 public class WorldUpdater {
     public static final double MIN_DISTANCE = 1.25;
     private WorldModel worldModel;
     private WorldController worldController;
     private List<Creature> newBornList = new ArrayList<>();
 
+    /**
+     * Constructs a WorldUpdater object with the specified WorldModel and WorldController.
+     *
+     * @param worldModel      the WorldModel object representing the world state
+     * @param worldController the WorldController object for controlling the world
+     */
     public WorldUpdater(WorldModel worldModel, WorldController worldController) {
         this.worldModel = worldModel;
         this.worldController = worldController;
     }
 
+    /**
+     * Updates the world state based on the given delta time.
+     *
+     * @param delta the time elapsed since the last update
+     */
     public void updateWorld(double delta) {
         Iterator<Creature> creatureIterator = worldModel.getCreatures().iterator();
 
@@ -52,6 +67,12 @@ public class WorldUpdater {
         handleFoodCreation();
     }
 
+    /**
+     * Handles the movement of the creature towards its target position.
+     *
+     * @param delta    the time elapsed since the last update
+     * @param creature the creature to handle the movement for
+     */
     private void handleMoving(double delta, Creature creature) {
         //TODO Maybe only compute stuff if target changes, else let speed be the same
 
@@ -79,6 +100,12 @@ public class WorldUpdater {
         }
     }
 
+    /**
+     * Handles the mating behavior of the creature.
+     *
+     * @param delta    the time elapsed since the last update
+     * @param creature the creature to handle the mating for
+     */
     private void handleMating(double delta, Creature creature) {
         Iterator<Creature> secondIterator = worldModel.getCreatures().iterator();
         while (secondIterator.hasNext()) {
@@ -108,6 +135,12 @@ public class WorldUpdater {
         }
     }
 
+    /**
+     * Handles the food intake of the creature.
+     *
+     * @param delta    the time elapsed since the last update
+     * @param creature the creature to handle the food intake for
+     */
     private void handleFoodIntake(double delta, Creature creature) {
         Iterator<Food> foodIterator = worldModel.getFoods().iterator();
 
@@ -125,6 +158,13 @@ public class WorldUpdater {
         }
     }
 
+    /**
+     * Handles the energy depletion of the creature.
+     *
+     * @param delta            the time elapsed since the last update
+     * @param creatureIterator the iterator for iterating over the creatures in the world
+     * @param creature         the creature to handle the energy depletion for
+     */
     private void handleEnergyDepletion(double delta, Iterator<Creature> creatureIterator, Creature creature) {
         double energyDepletion = WorldModel.baseEnergyDepletionRate;
 
@@ -147,6 +187,13 @@ public class WorldUpdater {
         }
     }
 
+    /**
+     * Handles the life depletion of the creature.
+     *
+     * @param delta            the time elapsed since the last update
+     * @param creatureIterator the iterator for iterating over the creatures in the world
+     * @param creature         the creature to handle the life depletion for
+     */
     private void handleLifeDepletion(double delta, Iterator<Creature> creatureIterator, Creature creature) {
         creature.setLife(creature.getLife() + (1 * delta * WorldModel.speedFactor));
 
@@ -159,6 +206,9 @@ public class WorldUpdater {
         }
     }
 
+    /**
+     * Handles the creation of food in the world.
+     */
     private void handleFoodCreation() {
         for (int i = 0; i < WorldModel.speedFactor; i++) {
             if (worldModel.getFoods().size() < WorldModel.maxFoodAmount &&
@@ -172,6 +222,12 @@ public class WorldUpdater {
         }
     }
 
+    /**
+     * Handles the pregnancy of the creature.
+     *
+     * @param creature the creature to handle the pregnancy for
+     * @param delta    the time elapsed since the last update
+     */
     private void handlePregnancy(Creature creature, double delta) {
         if (creature.getBreedTime() > 1) {
             creature.setBreedTime(creature.getBreedTime() - (creature.getBreedProgressSpeed() * delta * WorldModel.speedFactor));
@@ -188,6 +244,13 @@ public class WorldUpdater {
         }
     }
 
+    /**
+     * Creates a fetus by combining the traits of the father and mother creatures.
+     *
+     * @param father  the father creature
+     * @param mother  the mother creature
+     * @return the created fetus creature
+     */
     private Creature createFetus(Creature father, Creature mother) {
         double energy = mother.getBreedLength();
         double maxEnergy = ((father.getMaxEnergy() + mother.getMaxEnergy()) / 2) * VariationHelper.mutationFactor(WorldModel.mutationRate);
@@ -199,8 +262,7 @@ public class WorldUpdater {
         Gender gender;
         if (Math.random() >= 0.5) {
             gender = Gender.MALE;
-        }
-        else {
+        } else {
             gender = Gender.FEMALE;
         }
         CreatureAI ai = new BasicAI();

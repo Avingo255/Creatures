@@ -14,6 +14,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 
+/**
+ * This class represents the view for creating creatures with variance.
+ * It extends the JFrame class and implements the ActionListener interface.
+ */
 public class CreateCreaturesView extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
 
@@ -44,6 +48,13 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
     private JButton createButton;
 
     //TODO Default Values
+    /**
+     * Constructs a new CreateCreaturesView object.
+     * 
+     * @param worldController the WorldController object
+     * @param sizeX the size of the X dimension
+     * @param sizeY the size of the Y dimension
+     */
     public CreateCreaturesView(WorldController worldController, double sizeX, double sizeY) {
         this.worldController = worldController;
         this.sizeX = sizeX;
@@ -61,7 +72,9 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-
+    /**
+     * Initializes the user interface components.
+     */
     private void initUI() {
         backPanel = new JPanel();
         backPanel.setLayout(new GridLayout(0, 1));
@@ -71,6 +84,7 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
             panels[k] = new JPanel(new FlowLayout(FlowLayout.LEFT));
         }
 
+        // Initialize input fields
         amountInput = new JTextField();
         amountInput.setPreferredSize(new Dimension(50, 20));
         maxEnergyInput = new JTextField();
@@ -105,6 +119,7 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
         breedProgressSpeedVarianceInput = new JTextField();
         breedProgressSpeedVarianceInput.setPreferredSize(new Dimension(50, 20));
 
+        // Add input fields to panels
         panels[0].add(new JLabel("Amount:"));
         panels[0].add(amountInput);
 
@@ -139,6 +154,7 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
         panels[8].add(breedProgressSpeedInput);
         panels[8].add(breedProgressSpeedVarianceInput);
 
+        // Add panels to backPanel
         for (JPanel p : panels) {
             backPanel.add(p);
         }
@@ -158,6 +174,9 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Creates creatures based on the user input.
+     */
     private void createCreatures() {
         double amount = 0;
         double maxEnergy = 0;
@@ -178,6 +197,7 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
         double breedProgressSpeedVariance = 0;
 
         try {
+            // Parse user input
             amount = Double.parseDouble(amountInput.getText());
             maxEnergy = Double.parseDouble(maxEnergyInput.getText());
             maxLife = Double.parseDouble(maxLifeInput.getText());
@@ -201,6 +221,7 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
         }
 
         try {
+            // Check if input values are valid
             AssertionHelper.checkSmallerZero(amount, "Amount");
             AssertionHelper.checkSmallerZero(maxEnergy, "Max Energy");
             AssertionHelper.checkSmallerZero(maxLife, "Max Life");
@@ -219,6 +240,12 @@ public class CreateCreaturesView extends JFrame implements ActionListener {
             AssertionHelper.checkSmallerZero(breedProgressSpeedVariance, "Breed Progress Speed Variance");
 
             AssertionHelper.checkSmallerEqualThan(maleRation, 100, "Male Ratio");
+        } catch (AssertionException e) {
+            // Display error message if assertion fails
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Invalid input", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+}
 
             AssertionHelper.checkSmallerEqualThan(maxEnergyVariance, maxEnergy, "Max Energy Variance");
             AssertionHelper.checkSmallerEqualThan(maxLifeVariance, maxLife, "Max Life Variance");

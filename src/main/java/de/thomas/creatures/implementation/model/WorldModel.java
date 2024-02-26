@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorldModel {
-    //TODO add better access methods for creatures and food (grid based etc.)
     public static int maxFoodEnergy = 100;
     public static int maxFoodAmount = 500;
     public static double baseEnergyDepletionRate = 1;
