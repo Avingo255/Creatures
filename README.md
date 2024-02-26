@@ -11,10 +11,4 @@ This project uses [Gradle](https://gradle.org/). The gradle wrapper is also incl
 installed manually.
 Run ```gradlew build``` to build the project and ```gradlew run``` to execute it.
 
-### Documentation
 
-For more information take a look at the [Wiki](https://github.com/thopit/Creatures/wiki).
-
-### Download
-
-Get the latest release [here](https://github.com/thopit/Creatures/releases).
